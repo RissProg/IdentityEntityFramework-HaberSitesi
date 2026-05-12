@@ -1,0 +1,155 @@
+@model IEnumerable<IdentityOrnek.Models.Haber>
+
+<div class="news-logo-container text-center py-4" style="background-color: #15171a; border-bottom: 4px solid #e74c3c;">
+    <h1 class="fw-bold mb-0" style="color: #ffffff; font-size: 3.5rem; letter-spacing: -1px;">
+        GÜNDEM<span style="color: #e74c3c;">HABER</span>
+    </h1>
+    <p class="text-secondary mb-0 mt-1 mb-3" style="letter-spacing: 3px; font-size: 0.85rem;">
+        TÜRKİYE'NİN EN DİNAMİK HABER PLATFORMU
+    </p>
+
+<style>
+    body {
+        background-color: #1e2023;
+    }
+    
+    .carousel-caption-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background: rgba(0, 0, 0, 0.7); 
+        padding: 30px;
+        border-radius: 15px;
+        width: 60%;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .carousel-caption-center h3 {
+        color: white;
+        font-weight: bold;
+        margin-bottom: 15px;
+        font-size: 2rem;
+    }
+
+    .stock-tracker {
+        margin-top: 20px;
+        background-color: #06182e;
+        color: white;
+        padding: 10px 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border-bottom: 5px solid #483d3d;
+        border-top: 5px solid #3d4248;
+    }
+
+    .stock-item {
+        display: inline-block;
+        padding: 0 25px;
+        border-right: 1px solid #444;
+    }
+
+    .stock-name { font-weight: bold; margin-right: 5px; }
+    .stock-price { color: #fff; }
+    .text-up { color: #2ecc71; } 
+    .text-down { color: #e74c3c; }
+
+    .stock-scroll {
+        display: inline-block;
+        animation: scroll-left 60s linear infinite;
+    }
+
+    @@keyframes scroll-left {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+</style>
+
+@{
+    var sliderHaberler = Model.Take(6).ToList();
+}
+
+@if (sliderHaberler.Any())
+{
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @for (int i = 0; i < sliderHaberler.Count; i++)
+            {
+                var haber = sliderHaberler[i];
+                var activeClass = i == 0 ? "active" : "";
+
+                <div class="carousel-item @activeClass">
+                    <img style="height: 500px; object-fit: cover; filter: brightness(0.6);" 
+                         src="@(!string.IsNullOrEmpty(haber.GorselUrl) ? haber.GorselUrl : "/img/default-haber.jpg")" 
+                         class="d-block w-100" 
+                         alt="@haber.Baslik">
+                    
+                    <div class="carousel-caption-center">
+                        <h3>@haber.Baslik</h3>
+                        <p class="small text-light mb-4">
+                            Yazar: @(haber.Yazar != null ? $"{haber.Yazar.Ad} {haber.Yazar.Soyad}" : "Anonim")
+                        </p>
+                        <a asp-action="Detay" asp-route-id="@haber.Id" class="btn btn-info btn-lg px-5 shadow">Haberi Oku  </a>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+}
+
+<div class="stock-tracker shadow-sm">
+    <div class="stock-scroll">
+        <span class="stock-item"><span class="stock-name">BIST 100</span> <span class="stock-price">9.120,40</span> <span class="text-up">▲ %1,20</span></span>
+        <span class="stock-item"><span class="stock-name">DOLAR</span> <span class="stock-price">32,45</span> <span class="text-up">▲ %0,15</span></span>
+        <span class="stock-item"><span class="stock-name">EURO</span> <span class="stock-price">35,12</span> <span class="text-down">▼ %0,08</span></span>
+        <span class="stock-item"><span class="stock-name">ALTIN</span> <span class="stock-price">2.450,00</span> <span class="text-up">▲ %0,45</span></span>
+        <span class="stock-item"><span class="stock-name">BTC</span> <span class="stock-price">64.120$</span> <span class="text-down">▼ %2,10</span></span>
+        <span class="stock-item"><span class="stock-name">BIST 100</span> <span class="stock-price">9.120,40</span> <span class="text-up">▲ %1,20</span></span>
+        <span class="stock-item"><span class="stock-name">DOLAR</span> <span class="stock-price">32,45</span> <span class="text-up">▲ %0,15</span></span>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0 bg-dark text-white">
+                    @if (!string.IsNullOrEmpty(item.GorselUrl))
+                    {
+                        <img src="@item.GorselUrl" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Baslik</h5>
+                        <p class="card-text text-secondary small">
+                            @{
+                                var icerikOzeti = System.Text.RegularExpressions.Regex.Replace(item.Icerik, "<.*?>", String.Empty);
+                                if (icerikOzeti.Length > 100) icerikOzeti = icerikOzeti.Substring(0, 100) + "...";
+                            }
+                            @icerikOzeti
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center">
+                        <a asp-action="Detay" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Devamını Oku</a>
+                        
+                        @if (User.IsInRole("Admin") || User.IsInRole("Yazar"))
+                        {
+                            <div class="btn-group">
+                                <a asp-action="Duzenle" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Düzenle</a>
+                                <a asp-action="Sil" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

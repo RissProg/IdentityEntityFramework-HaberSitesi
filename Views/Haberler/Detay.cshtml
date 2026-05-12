@@ -1,0 +1,119 @@
+@model IdentityOrnek.Models.Haber
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h1 class="display-4">@Model.Baslik</h1>
+            <p class="text-muted border-bottom pb-2">
+                @Model.OlusturulmaTarihi.ToString("f") |
+                <strong>Yazar:</strong> @(Model.Yazar != null ? Model.Yazar.Ad + " " + Model.Yazar.Soyad : "Yazar Belirtilmemiş")
+            </p>
+
+            @if (!string.IsNullOrEmpty(Model.GorselUrl))
+            {
+                <div class="text-center mb-4">
+                    <img src="@Model.GorselUrl" class="img-fluid rounded shadow" style="max-height:500px;">
+                </div>
+            }
+
+            <div class="haber-metni fs-5 mb-5" style="line-height: 1.8; text-align: justify;">
+                @Html.Raw(Model.Icerik)
+            </div>
+
+
+            <hr />
+            <hr class="mt-5" />
+            <h4 class="mb-4">İlginizi Çekebilecek Diğer "@Model.Kategori" Haberleri</h4>
+
+            <div class="row mb-5">
+                @if (ViewBag.BenzerHaberler != null)
+                {
+                    foreach (var benzer in ViewBag.BenzerHaberler as List<Haber>)
+                    {
+                        <div class="col-md-4">
+                            <div class="card shadow-sm h-100">
+                                @if (!string.IsNullOrEmpty(benzer.GorselUrl))
+                                {
+                                    <img src="@benzer.GorselUrl" class="card-img-top" alt="@benzer.Baslik"
+                                         style="height: 180px; object-fit: cover;">
+                                }
+                                <div class="card-body">
+                                    <h6 class="card-title text-truncate">@benzer.Baslik</h6>
+                                    <small class="text-muted">@benzer.OlusturulmaTarihi.ToString("dd MMM yyyy")</small>
+                                </div>
+                                <div class="card-footer bg-white border-top-0">
+                                    <a asp-action="Detay" asp-route-id="@benzer.Id"
+                                       class="btn btn-sm btn-outline-primary w-100">Haberi Oku</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="comments-section mt-5">
+                <h3>Habere Gelen Kullanıcı Yorumları</h3>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="card my-4 bg-light shadow-sm">
+                        <div class="card-body">
+                            <h5>Fikrinizi Paylaşın</h5>
+                            <form asp-action="YorumEkle" method="post">
+                                <input type="hidden" name="HaberId" value="@Model.Id" />
+                                <div class="mb-3">
+                                    <textarea name="Icerik" class="form-control" rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Yorumu Gönder</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info my-4 border-start border-4 border-info">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        Yorum yapabilmek için lütfen <a asp-controller="Account" asp-action="Login"
+                                                        class="fw-bold text-decoration-none">giriş yapın</a>
+                        veya <a asp-controller="Account" asp-action="Register" class="fw-bold text-decoration-none">üye
+                        olun</a>.
+                    </div>
+                }
+
+                <div class="mt-4">
+                    @if (ViewBag.Yorumlar != null && ((List<IdentityOrnek.Models.Yorum>)ViewBag.Yorumlar).Any())
+                    {
+                        foreach (var yorum in (List<IdentityOrnek.Models.Yorum>)ViewBag.Yorumlar)
+                        {
+                            <div class="card mb-3 border-0 border-bottom">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <h6 class="mb-0 fw-bold">@yorum.AppUser.Ad @yorum.AppUser.Soyad</h6>
+                                        <small class="text-muted">@yorum.Tarih.ToString("g")</small>
+                                    </div>
+                                    <p class="card-text">@yorum.Icerik</p>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <form asp-action="YorumSil" method="post" class="d-inline float-end">
+                                            <input type="hidden" name="id" value="@yorum.Id" />
+                                            <input type="hidden" name="haberId" value="@Model.Id" />
+                                            <button type="submit" class="btn btn-sm text-danger border-0 p-0"
+                                                    onclick="return confirm('Silinsin mi?')">Yorumu Sil</button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted small">Henüz yorum yapılmamış.</p>
+                    }
+                </div>
+
+                
+
+                <hr />
+                <h4>Yorumlar</h4>
+            </div>
+        </div>
+    </div>
+</div>

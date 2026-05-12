@@ -1,0 +1,50 @@
+@model IEnumerable<IdentityOrnek.Models.Haber>
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white d-flex justify-content-between">
+            <h5 class="mb-0">Haber Yönetim Masası</h5>
+            <a asp-action="Ekle" class="btn btn-success btn-sm">Yeni Haber Ekle</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Görsel</th>
+                        <th>Başlık</th>
+                        <th>Kategori</th>
+                        <th>Yazar</th>
+                        <th>Tarih</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var haber in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@haber.GorselUrl" style="width: 60px; height: 40px; object-fit: cover;"
+                                     class="rounded shadow-sm">
+                            </td>
+                            <td><strong>@haber.Baslik</strong></td>
+                            <td>@haber.Kategori</td>
+                            <td>@haber.Yazar?.Ad @haber.Yazar?.Soyad</td>
+                            
+                            <td>@haber.OlusturulmaTarihi.ToShortDateString()</td>
+                            <td class="text-end">
+                                <div class="btn-group">
+                                    <a asp-action="Detay" asp-route-id="@haber.Id"
+                                       class="btn btn-sm btn-outline-info">Gözat</a>
+                                    <a asp-action="Duzenle" asp-route-id="@haber.Id"
+                                       class="btn btn-sm btn-outline-warning">Düzenle</a>
+                                    <a asp-action="Sil" asp-route-id="@haber.Id" class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Silinsin mi?')">Sil</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

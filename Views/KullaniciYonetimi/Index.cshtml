@@ -1,0 +1,48 @@
+@model IEnumerable<IdentityOrnek.Models.AppUser>
+@{
+    var rolesDict = ViewBag.Roles as Dictionary<string, IList<string>>;
+}
+
+<div class="container mt-4">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Ad Soyad</th>
+                <th>E-Posta</th>
+                <th>Aktif Roller</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Ad @user.Soyad</td>
+                    <td>@user.Email</td>
+                    <td>
+                        @if (rolesDict != null && rolesDict.ContainsKey(user.Id))
+                        {
+                            foreach (var role in rolesDict[user.Id])
+                            {
+                                <span class="badge bg-info text-dark">@role</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (rolesDict != null && !rolesDict[user.Id].Contains("Admin"))
+                        {
+                            <a asp-action="AdminYap" asp-route-id="@user.Id" class="btn btn-sm btn-primary">Admin Yap</a>
+        
+                            @if (!rolesDict[user.Id].Contains("Yazar"))
+                            {
+                                <a asp-action="YazarYap" asp-route-id="@user.Id" class="btn btn-sm btn-info">Yazar Yap</a>
+                            }
+                        }
+                        <a asp-action="Sil" asp-route-id="@user.Id" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Silinsin mi?')">Sil</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,91 @@
+@model IdentityOrnek.Models.ViewModels.RegisterViewModel
+<a asp-controller="Haberler" asp-action="Index" class="btn btn-outline-primary mb-5">← Haberlere Geri Dön</a>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="row border rounded-4 shadow-lg overflow-hidden bg-white">
+                
+                <div class="col-md-5 bg-dark text-white p-5 d-flex flex-column justify-content-center"
+                     style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+                    <h2 class="mb-4 fw-bold">Gündemi Yakalayın!</h2>
+                    <p class="lead" style="font-size: 1.1rem;">Son dakika gelişmelerini anında öğrenmek, favori
+                        yazarlarınızı takip etmek ve tartışmalara katılmak için ücretsiz hesabınızı oluşturun.</p>
+                    
+                        <ul class="list-unstyled mt-4">
+                            <li class="mb-3 d-flex align-items-center">
+                                <span class="bg-primary rounded-circle p-1 me-3 d-flex"><i
+                                    class="bi bi-check text-white"></i></span>
+                                    Özel içeriklere ve analizlere sınırsız erişim
+                                </li>
+                                <li class="mb-3 d-flex align-items-center">
+                                    <span class="bg-primary rounded-circle p-1 me-3 d-flex"><i
+                                        class="bi bi-check text-white"></i></span>
+                                        Haberlere yorum yapma ayrıcalığı
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <span class="bg-primary rounded-circle p-1 me-3 d-flex"><i
+                                            class="bi bi-check text-white"></i></span>
+                                            Size özel kişiselleştirilmiş haber akışı
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-7 p-5 bg-light">
+                                    <h3 class="mb-4 text-dark fw-bold border-bottom pb-2">Üye Kaydı</h3>
+                    
+                                    <form asp-action="Register" asp-controller="Account" method="post">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-bold"></div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label asp-for="Ad" class="form-label text-muted fw-bold">Ad</label>
+                                                <input asp-for="Ad" class="form-control" placeholder="Adınız">
+                                                    <span asp-validation-for="Ad" class="text-danger small"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label asp-for="Soyad" class="form-label text-muted fw-bold">Soyad</label>
+                                                    <input asp-for="Soyad" class="form-control" placeholder="Soyadınız">
+                                                        <span asp-validation-for="Soyad" class="text-danger small"></span>
+                                                    </div>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <label asp-for="Email" class="form-label text-muted fw-bold">E-Posta Adresi</label>
+                                                        <input asp-for="Email" type="email" class="form-control" placeholder="ornek@haber.com">
+                                                            <span asp-validation-for="Email" class="text-danger small"></span>
+                                                        </div>
+                                                        <div class="col-md-6 mb-3">
+                                                            <label asp-for="Telefon" class="form-label text-muted fw-bold">Cep Telefonu</label>
+                                                            <input asp-for="Telefon" class="form-control" placeholder="05xx xxx xx xx">
+                                                                <span asp-validation-for="Telefon" class="text-danger small"></span>
+                                                            </div>
+
+                                                            <div class="col-md-6 mb-3">
+                                                                <label asp-for="Password" class="form-label text-muted fw-bold">Şifre</label>
+                                                                <input asp-for="Password" type="password" class="form-control" placeholder="••••••••">
+                                                                    <span asp-validation-for="Password" class="text-danger small"></span>
+                                                                </div>
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label asp-for="ComfirmPassword" class="form-label text-muted fw-bold">Şifre
+                                                                        (Tekrar)</label>
+                                                                        <input asp-for="ComfirmPassword" type="password" class="form-control"
+                                                                               placeholder="••••••••">
+                                                                            <span asp-validation-for="ComfirmPassword" class="text-danger small"></span>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
+                                                                                Aramıza Katıl
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                <div class="mt-4 text-center">
+                                                                    <p class="text-muted small mb-0">Zaten bir hesabınız var mı?
+                                                                        <a href="/Account/Login" class="text-primary text-decoration-none fw-bold">Giriş Yapın</a>
+                                                                    </p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>

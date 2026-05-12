@@ -1,0 +1,82 @@
+@model IdentityOrnek.Models.ViewModels.LoginViewModel
+<a asp-controller="Haberler" asp-action="Index" class="btn btn-outline-primary mb-5">← Haberlere Geri Dön</a>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-lg overflow-hidden rounded-0">
+                <div class="row g-0">
+                    
+                    <div class="col-md-5 d-none d-md-flex flex-column justify-content-between p-5 text-white"
+                         style="background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)) center/cover;">
+                        <div>
+                            <img style="width: 100%;" src="~/img/gggggg.png" alt="">
+                                <h1 class="mt-1 fw-bold mb-0" style="color: #ffffff; font-size: 2.5rem; letter-spacing: -1px;">
+                                    GÜNDEM<span style="color: #e74c3c;">HABER</span></h1>
+                                    <h2 class="fw-bold text-uppercase border-bottom border-secondary pb-3 mb-4"
+                                        style="font-family: 'Georgia', serif; letter-spacing: 1px;">
+                                    </h2>
+                                    <p class="lead fs-6 text-light opacity-75">
+                                        <strong>Bağımsız haberciliğe destek olmak, özel içerikleri okumak ve haberlere yorum yapmak için
+                                        okur hesabınıza giriş yapın.</strong> 
+                                    </p>
+                                </div>
+                                <div class="mt-auto">
+                                    <small class="text-secondary">© @DateTime.Now.Year Tüm hakları saklıdır.</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-7 p-4 p-md-5 bg-white">
+                                <div class="mb-4">
+                                    <h3 class="fw-bold mb-1" style="font-family: 'Georgia', serif; color: #1e293b;">Okur Girişi
+                                    </h3>
+                                    <p class="text-muted small">Gündemi yakalamaya devam edin.</p>
+                                </div>
+
+                                <form asp-action="Login" method="post">
+                                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-0 small p-2"
+                                         role="alert"></div>
+
+                                    <div class="form-floating mb-3">
+                                        <input asp-for="Email" class="form-control rounded-0" id="floatingEmail"
+                                               placeholder="isim@ornek.com" />
+                                        <label asp-for="Email" for="floatingEmail" class="text-muted">E-posta Adresi</label>
+                                        <span asp-validation-for="Email" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input asp-for="Password" type="password" class="form-control rounded-0"
+                                               id="floatingPassword" placeholder="Şifre" />
+                                        <label asp-for="Password" for="floatingPassword" class="text-muted">Şifre</label>
+                                        <span asp-validation-for="Password" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="form-check">
+                                            <input asp-for="RememberMe" class="form-check-input rounded-0 border-secondary"
+                                                   id="rememberMe" />
+                                            <label asp-for="RememberMe" class="form-check-label text-muted small"
+                                                   for="rememberMe">Beni Hatırla</label>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit"
+                                            class="btn btn-danger w-100 py-3 rounded-0 text-uppercase fw-bold mb-4"
+                                            style="letter-spacing: 0.5px;">
+                                        Giriş Yap
+                                    </button>
+                                </form>
+                        
+                                <div class="text-center mt-3 pt-3 border-top">
+                                    <p class="text-muted mb-0">
+                                        Henüz okurumuz değil misiniz?
+                                        <a asp-action="Register" class="text-dark fw-bold text-decoration-none"
+                                           style="border-bottom: 2px solid #b91c1c;">Hemen Kayıt Olun</a>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

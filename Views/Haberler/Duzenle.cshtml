@@ -1,0 +1,140 @@
+@model IdentityOrnek.Models.Haber
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0">Haberi Düzenle</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Duzenle" enctype="multipart/form-data" id="haberForm">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="GorselUrl" />
+                <input type="hidden" asp-for="YazarId" />
+                <input type="hidden" asp-for="OlusturulmaTarihi" />
+
+                <div class="mb-3">
+                    <label asp-for="Baslik" class="form-label font-weight-bold">Haber Başlığı</label>
+                    <input asp-for="Baslik" class="form-control" />
+                    <span asp-validation-for="Baslik" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Kategori" class="form-label font-weight-bold">Haber Kategorisi</label>
+                    <select asp-for="Kategori" class="form-select">
+                        <option value="Ekonomi">Ekonomi</option>
+                        <option value="Siyaset">SİYASET</option>
+                        <option value="Gundem">GÜNDEM</option>
+                        <option value="Magazin">Magazin</option>
+                        <option value="Spor">Spor</option>
+                        <option value="Kripto">Kripto Para</option>
+                    </select>
+                    <span asp-validation-for="Kategori" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label font-weight-bold">Mevcut Görsel</label>
+                    @if (!string.IsNullOrEmpty(Model.GorselUrl))
+                    {
+                        <div class="mb-2">
+                            <img src="@Model.GorselUrl" style="width:200px;" class="img-thumbnail" />
+                        </div>
+                    }
+                    <input type="file" name="Gorsel" class="form-control" accept="image/*" />
+                    <small class="text-muted">Değiştirmek istemiyorsanız boş bırakın.</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label font-weight-bold">Haber İçeriği</label>
+                    
+                    <textarea asp-for="Icerik" id="Icerik" class="form-control" rows="15"></textarea>
+                    <span asp-validation-for="Icerik" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success px-5">Güncelle</button>
+                    <a asp-action="Liste" class="btn btn-secondary">İptal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.tiny.cloud/1/81tdbv3v2tmd9e0wdmlvcn4r8o8ka5s3vf0qf7h4mezvgwu0/tinymce/8/tinymce.min.js"
+            referrerpolicy="origin" crossorigin="anonymous"></script>
+    
+    <script>
+        // 1. FORMUN YANLIŞLIKLA GÖNDERİLMESİNİ (SAYFA YENİLENMESİNİ) ENGELLEYEN KOD
+        document.getElementById('haberForm').addEventListener('keydown', function (event) {
+            // Eğer Enter'a basıldıysa ve basılan yer bir yazı alanı (textarea) değilse işlemi durdur
+            if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
+                event.preventDefault();
+            }
+        });
+
+        // 2. TİNYMCE AYARLARI VE MANUEL GÖRSEL YÜKLEME İŞLEYİCİSİ
+        tinymce.init({
+            selector: '#Icerik',
+            plugins: [
+                'image', 'media', 'link', 'table', 'lists', 'wordcount',
+                'searchreplace', 'emoticons', 'charmap', 'anchor',
+                'visualblocks', 'codesample', 'autolink'
+            ],
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | align lineheight | numlist bullist indent outdent | link image media table | emoticons charmap | removeformat',
+            
+            file_picker_types: 'image media',
+            height: 500,
+            branding: false,
+
+            // SAYFA YENİLENMESİNİ VE AĞ HATALARINI ÇÖZEN ÖZEL YÜKLEYİCİ
+            images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', '/Haberler/ResimYukle');
+
+                xhr.upload.onprogress = (e) => {
+                    progress(e.loaded / e.total * 100);
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 403 || xhr.status === 401) {
+                        reject({ message: 'Yetki hatası: Lütfen giriş yaptığınızdan emin olun.', remove: true });
+                        return;
+                    }
+                    if (xhr.status < 200 || xhr.status >= 300) {
+                        reject('Sunucu Hatası: HTTP ' + xhr.status);
+                        return;
+                    }
+
+                    try {
+                        const json = JSON.parse(xhr.responseText);
+                        if (!json || typeof json.location != 'string') {
+                            reject('Sunucudan geçersiz bir yanıt geldi. URL bulunamadı.');
+                            return;
+                        }
+                        resolve(json.location); // Başarılı! Görseli editöre ekle.
+                    } catch (err) {
+                        reject('Sunucu yanıtı okunamadı. Yanıt: ' + xhr.responseText);
+                    }
+                };
+
+                xhr.onerror = () => {
+                    reject('Görsel yüklenemedi. Sunucuya ulaşılamıyor.');
+                };
+
+                const formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                xhr.send(formData);
+            }),
+
+            setup: function (editor) {
+                editor.on('change', function () {
+                    tinymce.triggerSave();
+                });
+            }
+        });
+    </script>
+}
+</script>
+}
